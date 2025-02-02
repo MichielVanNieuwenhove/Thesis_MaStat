@@ -1,0 +1,58 @@
+---
+title: "Initial Data Analysis"
+author: "Michiel Van Nieuwenhove"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r libs, include=FALSE}
+library(readxl)
+library(arrow)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Loading the data
+```{r}
+dta_pth <- "../Data/dta-output-20241010.xlsx"
+quotes_pth <- "../Data/quotes-output-20241010.xlsx"
+
+df_dta <- read_excel(dta_pth)
+df_quotes <- read_excel(quotes_pth)
+
+head(df_dta)
+head(df_quotes)
+```
+
+
+# dta-output
+# General analysis
+```{r, child="GeneralAnalysis_dta.Rmd"}
+```
+
+## Univariate analysis
+```{r, child="UnivariateAnalysis_dta.Rmd"}
+```
+
+## Multivariate analysis
+```{r, child="MultivariateAnalysis_dta.Rmd"}
+```
+
+
+# dta-output
+## Univariate analysis
+```{r, child="UnivariateAnalysis_dta.Rmd"}
+```
+
+## Multivariate analysis
+```{r, child="MultivariateAnalysis_dta.Rmd"}
+```
+
+
+# Export cleaned data as feather file
+
+
+

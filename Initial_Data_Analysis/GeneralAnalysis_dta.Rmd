@@ -1,0 +1,16 @@
+
+```{r}
+# summary
+summary(df_dta)
+
+# dimensions
+dim(df_dta)
+
+# duplicate data
+duplicates <- df_dta[duplicated(df_dta), ]
+duplicates
+
+# empty rows
+empty_rows <- df_dta[rowSums(is.na(df_dta)) == ncol(df_dta), ]
+print(empty_rows)
+```

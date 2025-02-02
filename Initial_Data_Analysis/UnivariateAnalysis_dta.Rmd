@@ -1,0 +1,60 @@
+
+### ID
+```{r}
+# convert to factor
+typeof(df_dta$ID)
+df_dta$fID <- as.factor(df_dta$ID)
+
+# levels
+table(df_dta$fID)
+
+# na values
+sum(is.na(df_dta$fID))
+```
+
+### Disease
+```{r}
+table(df_dta$DISEASE)
+df_dta$ID[df_dta$ID != df_dta$DISEASE]
+df_dta$DISEASE[df_dta$ID != df_dta$DISEASE]
+
+# remove column
+df_dta$DISEASE <- NULL
+head(df_dta)
+```
+
+This is the exact same variable as ID, so can be removed.
+
+### Disease subtype
+```{r}
+# convert to factor
+typeof(df_dta$DISEASE_SUBTYPE)
+df_dta$fDISEASE_SUBTYPE <- as.factor(df_dta$DISEASE_SUBTYPE)
+
+# levels
+table(df_dta$fDISEASE_SUBTYPE)
+
+# na values
+sum(is.na(df_dta$fDISEASE_SUBTYPE))
+
+sum(!is.na(df_dta$fDISEASE_SUBTYPE) & df_dta$fID == "Crohns Disease")
+sum(!is.na(df_dta$fDISEASE_SUBTYPE) & df_dta$fID == "Long COVID")
+sum(!is.na(df_dta$fDISEASE_SUBTYPE) & df_dta$fID == "Malignant melanoma")
+```
+
+Is Na another level of the variable, or really just missing? If the latter, 
+why is there so much missing?
+
+### Dimension
+```{r}
+# convert to factor
+unique(df_dta$DIMENSION)
+typeof(df_dta$DIMENSION)
+df_dta$fDIMENSION <- as.factor(df_dta$DIMENSION)
+
+# levels
+table(df_dta$fDIMENSION)
+
+# na values
+sum(is.na(df_dta$fDIMENSION))
+```
