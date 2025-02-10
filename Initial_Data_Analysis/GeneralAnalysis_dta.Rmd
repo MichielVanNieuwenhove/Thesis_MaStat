@@ -8,9 +8,13 @@ dim(df_dta)
 
 # duplicate data
 duplicates <- df_dta[duplicated(df_dta), ]
-duplicates
+nrow(duplicates)
+print(duplicates)
 
 # empty rows
 empty_rows <- df_dta[rowSums(is.na(df_dta)) == ncol(df_dta), ]
-print(empty_rows)
+nrow(empty_rows)
 ```
+
+Keep the duplicate row?
+-> It seems very possible for duplicate data, so probably legitimate

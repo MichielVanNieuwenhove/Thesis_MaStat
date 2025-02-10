@@ -44,6 +44,76 @@ sum(!is.na(df_dta$fDISEASE_SUBTYPE) & df_dta$fID == "Malignant melanoma")
 
 Is Na another level of the variable, or really just missing? If the latter, 
 why is there so much missing?
+-> Different levels in Melanoma that doesnt seem much reported on.
+
+### Disease proxy
+```{r}
+# convert to factor
+typeof(df_dta$DISEASE_PROXY)
+df_dta$fDISEASE_PROXY <- as.factor(df_dta$DISEASE_PROXY)
+
+# levels
+table(df_dta$fDISEASE_PROXY)
+
+# na values
+sum(is.na(df_dta$fDISEASE_PROXY))
+
+sum(!is.na(df_dta$DISEASE_PROXY) & df_dta$fID == "Crohns Disease")
+sum(!is.na(df_dta$DISEASE_PROXY) & df_dta$fID == "Long COVID")
+sum(!is.na(df_dta$DISEASE_PROXY) & df_dta$fID == "Malignant melanoma")
+
+# check where different proxies are used
+crossTable_diseaseProxy <- table(df_dta$fID, df_dta$fDISEASE_PROXY)
+crossTable_diseaseProxy_df <- as.data.frame.matrix(crossTable_diseaseProxy)
+kable(crossTable_diseaseProxy_df, caption = "Cross Table of fID and fDISEASE_PROXY")
+```
+
+fDISEASE_PROXY: This column likely represents a related or associated condition 
+for the main disease in the fID column. It might indicate conditions that are 
+often seen together, risk factors, or proxy measures for broader disease 
+categories.
+
+Also a variable that is not frequently reported upon, and divides the disease in
+different categories.
+
+
+### Country
+```{r}
+# levels
+table(df_dta$COUNTRY)
+
+# na values
+sum(is.na(df_dta$COUNTRY))
+```
+In each row the value is the same, so the variable is not necessary for
+clustering. Just mention in thesis that it's data from Belgium.
+
+
+### Country proxy
+```{r}
+# levels
+table(df_dta$COUNTRY_PROXY)
+
+# na values
+sum(is.na(df_dta$COUNTRY_PROXY))
+```
+
+
+### Year
+```{r}
+# levels
+table(df_dta$YEAR)
+```
+
+
+### Sex
+```{r}
+table(df_dta$SEX)
+```
+
+
+
+
 
 ### Dimension
 ```{r}
