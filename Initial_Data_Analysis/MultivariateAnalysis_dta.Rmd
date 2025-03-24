@@ -1,0 +1,224 @@
+
+Some analysis between variables are not useful, so they are not done here.
+
+### ID
+#### ID x disease subtype
+```{r}
+crossTable <- table(df_dta$fID, df_dta$fDISEASE_SUBTYPE)
+crossTable_df <- as.data.frame.matrix(crossTable)
+kable(crossTable_df, caption = "Cross Table of fID and fDISEASE_SUBTYPE")
+```
+the disease-subtype is only accounted for in malignant melanoma.
+We can assign a different score to these, but since there are only 10 datapoints this may not be useful.
+
+
+#### ID x disease proxy
+```{r}
+crossTable <- table(df_dta$fID, df_dta$fDISEASE_PROXY)
+crossTable_df <- as.data.frame.matrix(crossTable)
+kable(crossTable_df, caption = "Cross Table of fID and fDISEASE_PROXY")
+```
+Disease proxy gives no new information about the disease.
+
+
+#### ID x dimension
+```{r}
+crossTable <- table(df_dta$fID, df_dta$fDIMENSION)
+crossTable_df <- as.data.frame.matrix(crossTable)
+kable(crossTable_df, caption = "Cross Table of fID and fDIMENSION")
+```
+All dimensions are accounted for, for all diseases, and can be used to differentiate between different dimensions of the indicators.
+
+
+#### ID x domain
+```{r}
+crossTable <- table(df_dta$fID, df_dta$fDOMAIN)
+crossTable_df <- as.data.frame.matrix(crossTable)
+kable(crossTable_df, caption = "Cross Table of fID and fDOMAIN")
+```
+The same comments apply to domain as to dimension.
+
+
+#### ID x criterion
+```{r}
+crossTable <- table(df_dta$fID, df_dta$fCRITERION)
+crossTable_df <- as.data.frame.matrix(crossTable)
+kable(crossTable_df, caption = "Cross Table of fID and fCRITERION")
+```
+All diseases seem to cover most criteria, this makes it possible for us to determine urgency levels separately for the diseases.
+However, not all diseases cover the same indicators per criterion.
+
+
+#### ID x Unit
+```{r}
+cross_table <- df_dta %>%
+  group_by(fID) %>%
+  summarise(
+    total_rows = n(),
+    rows_with_unit = sum(!is.na(UNIT))
+  )
+
+print(cross_table)
+```
+Some rows have no unit attached to their value, it might be the case that the rows just have no value.
+This will be further investigated In the 'Unit' section of the multivariate analysis.
+
+
+#### ID x Categories
+```{r}
+cross_table <- df_dta %>%
+  group_by(fID) %>%
+  summarise(
+    total_rows = n(),
+    rows_with_unit = sum(!is.na(CATEGORIES))
+  )
+
+print(cross_table)
+```
+A lot of rows have no category. This seems like a problem, but the indicator can often serve as category. In the data cleaning this problem will be adressed.
+
+
+#### ID x Value
+```{r}
+cross_table <- df_dta %>%
+  group_by(fID) %>%
+  summarise(
+    total_rows = n(),
+    rows_with_unit = sum(!is.na(VALUE))
+  )
+
+print(cross_table)
+```
+Most rows have values, which is good for our purposes. Some do not, but might still have quotes and keypoints that can be used. Rows that have none of these columns will need to be filtered out of the data, as we can not use them. The same holds true for the 'ID x Keypoint' and 'ID x Quote' sections below.
+
+
+#### ID x Keypoint
+```{r}
+cross_table <- df_dta %>%
+  group_by(fID) %>%
+  summarise(
+    total_rows = n(),
+    rows_with_unit = sum(!is.na(KEY_POINT))
+  )
+
+print(cross_table)
+```
+
+
+#### ID x Quotes
+```{r}
+cross_table <- df_dta %>%
+  group_by(fID) %>%
+  summarise(
+    total_rows = n(),
+    rows_with_unit = sum(!is.na(QUOTES))
+  )
+
+print(cross_table)
+```
+
+
+#### Comments
+It is not useful to analyse any of the other variables together (bivariatly) with ID, because the other variables are all in function of the indicators.
+Indicators x ID is only relevant itself in reference to the criteria.
+
+
+
+### Criterion & indicator
+#### ID x Criterion x Indicator
+```{r}
+# Crohns disease
+grouped_df <- df_dta[df_dta$fID == "Crohns Disease", ] %>%
+  filter(!is.na(fCRITERION), !is.na(fINDICATOR)) %>%
+  group_by(fCRITERION) %>%
+  summarise(Indicators = paste(unique(fINDICATOR), collapse = " | ")) %>%
+  ungroup()
+
+kable(grouped_df, caption = "fCRITERION and Associated fINDICATORs")
+
+
+# long covid
+grouped_df <- df_dta[df_dta$fID == "Long COVID", ] %>%
+  filter(!is.na(fCRITERION), !is.na(fINDICATOR)) %>%
+  group_by(fCRITERION) %>%
+  summarise(Indicators = paste(unique(fINDICATOR), collapse = " | ")) %>%
+  ungroup()
+
+kable(grouped_df, caption = "fCRITERION and Associated fINDICATORs")
+
+
+# malgnant melanoma
+grouped_df <- df_dta[df_dta$fID == "Malignant melanoma", ] %>%
+  filter(!is.na(fCRITERION), !is.na(fINDICATOR)) %>%
+  group_by(fCRITERION) %>%
+  summarise(Indicators = paste(unique(fINDICATOR), collapse = " | ")) %>%
+  ungroup()
+
+kable(grouped_df, caption = "fCRITERION and Associated fINDICATORs")
+```
+Some diseases contain other criteria with different indicators, but they all seem to have enough data to work with and compare against each other.
+
+
+#### Comments
+evaluating criterion (or Indicator) with the other variables will not give us any new useful information.
+What we could gain from this is seeing how much data misses per criterion (or indicator), but unusable missing data will be cleaned and analysed anyway in the data cleaning step.
+
+### Measure & Unit
+#### Measure x Unit x value
+```{r}
+table <- df_dta %>%
+  summarise(
+    measure_not_na_unit_na = sum(!is.na(MEASURE) & is.na(UNIT)),
+    measure_na_unit_not_na = sum(is.na(MEASURE) & !is.na(UNIT)),
+    measure_not_na_value_na = sum(!is.na(MEASURE) & is.na(VALUE)),
+    measure_na_value_not_na = sum(is.na(MEASURE) & !is.na(VALUE)),
+    value_not_na_unit_na = sum(!is.na(VALUE) & is.na(UNIT)),
+    value_na_unit_not_na = sum(is.na(VALUE) & !is.na(UNIT))
+  )
+
+print(table)
+```
+There are no rows where the measure has a value, but the unit does not. So for every measure we have a unit.
+Vice versa, this is not the case. In the data cleaning we will need to go row by row and analyse if there are among these any unusable rows.
+There are a few measures and units that have no value, they may still have keypoints and/or quotes.
+There are also values without a measure or unit. In this case the meaning of these values might be deduced from the indicators or categories.
+
+
+### Value & keypoints & quotes
+#### Value x Keypoint x Quotes
+```{r}
+rows_missing_all <- df_dta %>%
+  filter(is.na(VALUE) & is.na(KEY_POINT) & is.na(QUOTES)) %>%
+  summarise(count = n())
+
+print(rows_missing_all)
+```
+There are 53 rows where there are no values, keypoints and quotes. In theory these rows can than not be used. There are, however, some possible exceptions as mentioned before.
+
+
+### Conclusion
+There are a lot of possibilities where the rows can become unusable, in the data cleaning step we will need to carefully filter or alter the rows to be able to use them.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

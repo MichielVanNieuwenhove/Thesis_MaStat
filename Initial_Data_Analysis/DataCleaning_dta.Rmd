@@ -1,0 +1,154 @@
+
+### Rows without (VALUE & KEYPOINT & QUOTE)
+
+Now the rows that cannot be used for our purpose will be deleted from the dataset. These are all rows that don't have a value, keypoint and quote.
+Except the ones where there is a useful comment or meta that can be used, or the ones where a criterion does not need a value.
+This needs to be evaluated manually for every row.
+
+```{r}
+df_dta_nodata <- df_dta[is.na(df_dta$VALUE) & is.na(df_dta$KEY_POINT) & is.na(df_dta$QUOTES), 
+             c("fCRITERION", "fINDICATOR", "MEASURE", "UNIT", "CATEGORIES", "META_1", "META_2", "COMMENTS")]
+
+dim(df_dta)
+dim(df_dta_nodata)
+kable(df_dta_nodata)
+```
+
+*'% of participants who did not return to work (38%) or reduced their working hours (26%) at the time of the survey due to their health status'*
+This can be used to obtain two more categories with values, the other rows do not give us any information, so they can be removed.
+
+```{r}
+df_dta
+
+# create new rows
+old_row <- df_dta[grepl("% of participants who did not return to work", df_dta$META_1), ]
+old_row
+
+new_row_1 <- old_row
+new_row_1$CATEGORIES <- '% of participants who did not return to work at the time of the survey due to their health status'
+new_row_1$VALUE <- '38'
+new_row_1$VALUE_num <- 38
+new_row_1
+
+new_row_2 <- old_row
+new_row_2$CATEGORIES <- '% of participants who reduced their working hours at the time of the survey due to their health status'
+new_row_2$VALUE <- '26'
+new_row_2$VALUE_num <- 26
+
+df_dta_new <- rbind(df_dta[df_dta$META_1 != old_row$META_1, ], new_row_1, new_row_2)
+df_dta_new
+
+# remove old rows
+
+```
+
+
+### Rows without category
+
+In the data there is still one potential issue. There could be rows without a category, that still have a value, keypoint or quote. 
+These need to be examined carefully as the category often can be extracted from the context of the values and measure or if the indicator serves as the category.
+
+```{r}
+df_filtered <- df_dta %>%
+  filter(is.na(CATEGORIES)) %>%
+  mutate(
+    Has_KEY_POINT = ifelse(!is.na(KEY_POINT), "Yes", "No"),
+    Has_QUOTE = ifelse(!is.na(QUOTES), "Yes", "No")
+  ) %>%
+  select(fID, fCRITERION, fINDICATOR, MEASURE, UNIT, VALUE, Has_KEY_POINT, Has_QUOTE)
+
+kable(df_filtered, caption = "Rows with NA in CATEGORIES")
+```
+
+The empty categories are the result of an indicator having only one row, then, different categories are not necessary.
+We can look where this is the case and take another look at the data with this new information.
+
+```{r}
+df_filtered <- df_dta %>%
+  filter(is.na(CATEGORIES)) %>%
+  mutate(
+    Has_KEY_POINT = ifelse(!is.na(KEY_POINT), "Yes", "No"),
+    Has_QUOTE = ifelse(!is.na(QUOTES), "Yes", "No")
+  ) %>%
+  group_by(fID, fINDICATOR) %>% 
+  filter(n() >= 2) %>%
+  ungroup() %>%
+  select(fID, fCRITERION, fINDICATOR, MEASURE, UNIT, VALUE, Has_KEY_POINT, Has_QUOTE)
+
+kable(df_filtered, caption = "Duplicate (fID & fINDICATOR) Rows with NA in CATEGORIES")
+
+dim(df_dta)
+```
+
+There seems to be a mix up here between **VALUE** and **CATEGORIES**. 
+The rows look like they mean that if the treatment is very effective, than you have these quotes and keypoints.
+And, when the treatment is moderately effective, there is also a keypoint.
+Both keypoints are the exact same, but this does not necessarily mean we can remove the data.
+We can however change the value to a category.
+
+```{r}
+# change VALUE and CATEGORY
+df_dta <- df_dta %>%
+  mutate(
+    CATEGORIES = ifelse(fID == "Malignant melanoma" & 
+                        fINDICATOR == "Effectiveness of treatment" & 
+                        VALUE == "Very effective", VALUE, CATEGORIES),
+    
+    VALUE = ifelse(fID == "Malignant melanoma" & 
+                   fINDICATOR == "Effectiveness of treatment" & 
+                   VALUE == "Very effective", "0", VALUE)
+  )
+
+
+df_dta <- df_dta %>%
+  mutate(
+    CATEGORIES = ifelse(fID == "Malignant melanoma" & 
+                        fINDICATOR == "Effectiveness of treatment" & 
+                        VALUE == "Very effective", VALUE, CATEGORIES),
+    
+    VALUE = ifelse(fID == "Malignant melanoma" & 
+                   fINDICATOR == "Effectiveness of treatment" & 
+                   VALUE == "Moderately effective", "0", VALUE)
+  )
+
+
+```
+
+
+
+### cleaned dataset
+```{r}
+dim(df_dta)
+
+head(df_dta)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

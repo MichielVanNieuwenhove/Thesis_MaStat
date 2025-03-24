@@ -15,12 +15,17 @@ library(readxl)
 library(readr)
 library(knitr)
 library(arrow)
+library(dplyr)
 ```
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+The data cleaning and analysis done here works in a couple of steps. First, a general analysis is done, after which the duplicate rows and completely missing rows are discarded. Second, a univariate and multivariate analysis is done, where columns are discarded or changed. All decisions for this are reported upon in theses steps.
+Third, with the information gathered from the previous steps a thorough data cleaning is done.
+Lastly, The transformed dataset is re-analysed to get the final result.
+To quickly see the changes made and most important results from the analysis look at the conclusions after each section.
 
 # Loading the data
 ```{r}
@@ -30,21 +35,34 @@ head(df_dta)
 ```
 
 
-# Analysis and Data cleaning
+# First analysis & data cleaning (columns)
 ## General analysis
 ```{r, child="GeneralAnalysis_dta.Rmd"}
 ```
 
-## Univariate analysis
+## Univariate
 ```{r, child="UnivariateAnalysis_dta.Rmd"}
 ```
 
-## Multivariate analysis
+## Multivariate
 ```{r, child="MultivariateAnalysis_dta.Rmd"}
 ```
 
 
+# Data cleaning (rows)
+#```{r, child="DataCleaning_dta.Rmd"}
+#```
+
+
+# Final analysis
+## Univariate
+## Multivariate
+
+
 # Export cleaned data as feather file
+```{r}
+write_feather(df_dta, "../Data/df_dta.feather")
+```
 
 
 

@@ -9,12 +9,32 @@ dim(df_dta)
 # duplicate data
 duplicates <- df_dta[duplicated(df_dta), ]
 nrow(duplicates)
-print(duplicates)
 
+duplicates_t <- as.data.frame(t(duplicates))
+colnames(duplicates_t) <- "Values"
+kable(duplicates_t, format = "markdown")
+
+# remove duplicate
+df_dta <- df_dta %>% distinct()
+duplicates <- df_dta[duplicated(df_dta), ]
+nrow(duplicates)
+```
+Completely duplicate rows should not exist in the data, because of the way the data is set up.
+Duplicate rows would mean that 2 indicators for the same criterion, for the same category, would get the exact same value.
+This indicates that these two rows just measure the same thing twice, and would not be useful in this project.
+On top of that the **VALUE**, **KEYPOINT** and **QUOTE** variables in these duplicates are all missing.
+These variables should be the only indicators of the urgency of the row, therefore all rows that have all these variables missing can be discarded.
+There are some exceptions however. A category may not require a value attached to them, this can be the case if the category is just something that is present or not. This means we have to filter through all rows with these missing variables. Sometimes it may also be the case that extra information is given in the meta data, or that different categories are not necessary for a given criterion.
+We will first continue with the data analysis to understand all variables, then clean the data.
+
+```{r}
 # empty rows
 empty_rows <- df_dta[rowSums(is.na(df_dta)) == ncol(df_dta), ]
 nrow(empty_rows)
 ```
+There are no completely empty rows that can be discarded right away.
 
-Keep the duplicate row?
--> It seems very possible for duplicate data, so probably legitimate
+
+
+
+
