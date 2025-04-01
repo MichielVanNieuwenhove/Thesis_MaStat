@@ -22,10 +22,11 @@ nrow(duplicates)
 Completely duplicate rows should not exist in the data, because of the way the data is set up.
 Duplicate rows would mean that 2 indicators for the same criterion, for the same category, would get the exact same value.
 This indicates that these two rows just measure the same thing twice, and would not be useful in this project.
-On top of that the **VALUE**, **KEYPOINT** and **QUOTE** variables in these duplicates are all missing.
+On top of that the **VALUE**, **KEYPOINT** and **QUOTE** variables in these duplicate row are all missing.
 These variables should be the only indicators of the urgency of the row, therefore all rows that have all these variables missing can be discarded.
 There are some exceptions however. A category may not require a value attached to them, this can be the case if the category is just something that is present or not. This means we have to filter through all rows with these missing variables. Sometimes it may also be the case that extra information is given in the meta data, or that different categories are not necessary for a given criterion.
 We will first continue with the data analysis to understand all variables, then clean the data.
+A duplicate row however stays impossible, so can be removed.
 
 ```{r}
 # empty rows

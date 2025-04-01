@@ -16,20 +16,23 @@ library(readr)
 library(knitr)
 library(arrow)
 library(dplyr)
+library(openxlsx)
+library(tidyr)
+library(stringr)
 ```
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-The data cleaning and analysis done here works in a couple of steps. First, a general analysis is done, after which the duplicate rows and completely missing rows are discarded. Second, a univariate and multivariate analysis is done, where columns are discarded or changed. All decisions for this are reported upon in theses steps.
+The data cleaning and analysis done here works in a couple of steps. First, a general analysis is done, after which the duplicate rows and completely missing rows are discarded. Second, a univariate and multivariate analysis is done, where columns are discarded or changed. All decisions for this are reported upon in these steps. Some multivariate analysis is present in the univariate section, only when there is suspicion of a duplicate column, to be able to discard it right away.
 Third, with the information gathered from the previous steps a thorough data cleaning is done.
 Lastly, The transformed dataset is re-analysed to get the final result.
 To quickly see the changes made and most important results from the analysis look at the conclusions after each section.
 
 # Loading the data
 ```{r}
-dta_pth <- "../Data/dta-output-20241010.xlsx"
+dta_pth <- "../Data/dta-output-20250325.xlsx"
 df_dta <- read_excel(dta_pth)
 head(df_dta)
 ```
@@ -50,18 +53,32 @@ head(df_dta)
 
 
 # Data cleaning (rows)
-#```{r, child="DataCleaning_dta.Rmd"}
-#```
+```{r, child="DataCleaning_dta.Rmd"}
+```
 
+# Normalize Values
+```{r, child="NormalizeValues_dta.Rmd"}
+```
+
+# Separate Keypoints & Quotes
+```{r, child="SeparateText_dta.Rmd"}
+```
 
 # Final analysis
 ## Univariate
 ## Multivariate
 
 
-# Export cleaned data as feather file
+# Export cleaned data
 ```{r}
-write_feather(df_dta, "../Data/df_dta.feather")
+write_feather(df_dta, "../Data/Cleaned/df_dta_cleaned.feather")
+write.xlsx(df_dta, "../Data/Cleaned/df_dta_cleaned.xlsx")
+
+write_feather(df_dta_kp, "../Data/Cleaned/df_dta_kp_cleaned.feather")
+write.xlsx(df_dta_kp, "../Data/Cleaned/df_dta_kp_cleaned.xlsx")
+
+write_feather(df_dta_qt, "../Data/Cleaned/df_dta_qt_cleaned.feather")
+write.xlsx(df_dta_qt, "../Data/Cleaned/df_dta_qt_cleaned.xlsx")
 ```
 
 

@@ -7,7 +7,7 @@ This needs to be evaluated manually for every row.
 
 ```{r}
 df_dta_nodata <- df_dta[is.na(df_dta$VALUE) & is.na(df_dta$KEY_POINT) & is.na(df_dta$QUOTES), 
-             c("fCRITERION", "fINDICATOR", "MEASURE", "UNIT", "CATEGORIES", "META_1", "META_2", "COMMENTS")]
+             c("fCRITERION", "fINDICATOR", "CATEGORIES", "MEASURE", "UNIT", "CATEGORIES", "META_1", "META_2", "COMMENTS")]
 
 dim(df_dta)
 dim(df_dta_nodata)
@@ -18,8 +18,6 @@ kable(df_dta_nodata)
 This can be used to obtain two more categories with values, the other rows do not give us any information, so they can be removed.
 
 ```{r}
-df_dta
-
 # create new rows
 old_row <- df_dta[grepl("% of participants who did not return to work", df_dta$META_1), ]
 old_row
@@ -28,19 +26,21 @@ new_row_1 <- old_row
 new_row_1$CATEGORIES <- '% of participants who did not return to work at the time of the survey due to their health status'
 new_row_1$VALUE <- '38'
 new_row_1$VALUE_num <- 38
-new_row_1
 
 new_row_2 <- old_row
 new_row_2$CATEGORIES <- '% of participants who reduced their working hours at the time of the survey due to their health status'
 new_row_2$VALUE <- '26'
 new_row_2$VALUE_num <- 26
 
-df_dta_new <- rbind(df_dta[df_dta$META_1 != old_row$META_1, ], new_row_1, new_row_2)
-df_dta_new
-
-# remove old rows
-
+df_dta <- rbind(df_dta, new_row_1, new_row_2)
 ```
+```{r}
+# remove old rows
+df_dta <- df_dta[!is.na(df_dta$VALUE) | !is.na(df_dta$KEY_POINT) | !is.na(df_dta$QUOTES), ]
+head(df_dta)
+dim(df_dta)
+```
+
 
 
 ### Rows without category
@@ -55,12 +55,12 @@ df_filtered <- df_dta %>%
     Has_KEY_POINT = ifelse(!is.na(KEY_POINT), "Yes", "No"),
     Has_QUOTE = ifelse(!is.na(QUOTES), "Yes", "No")
   ) %>%
-  select(fID, fCRITERION, fINDICATOR, MEASURE, UNIT, VALUE, Has_KEY_POINT, Has_QUOTE)
+  select(fDISEASE, fCRITERION, fINDICATOR, MEASURE, UNIT, VALUE, Has_KEY_POINT, Has_QUOTE)
 
 kable(df_filtered, caption = "Rows with NA in CATEGORIES")
 ```
 
-The empty categories are the result of an indicator having only one row, then, different categories are not necessary.
+The empty categories are the result of an indicator having only one row, so different categories are not necessary.
 We can look where this is the case and take another look at the data with this new information.
 
 ```{r}
@@ -70,17 +70,17 @@ df_filtered <- df_dta %>%
     Has_KEY_POINT = ifelse(!is.na(KEY_POINT), "Yes", "No"),
     Has_QUOTE = ifelse(!is.na(QUOTES), "Yes", "No")
   ) %>%
-  group_by(fID, fINDICATOR) %>% 
+  group_by(fDISEASE, fINDICATOR) %>% 
   filter(n() >= 2) %>%
   ungroup() %>%
-  select(fID, fCRITERION, fINDICATOR, MEASURE, UNIT, VALUE, Has_KEY_POINT, Has_QUOTE)
+  select(fDISEASE, fCRITERION, fINDICATOR, MEASURE, UNIT, VALUE, Has_KEY_POINT, Has_QUOTE)
 
-kable(df_filtered, caption = "Duplicate (fID & fINDICATOR) Rows with NA in CATEGORIES")
+kable(df_filtered, caption = "Duplicate (fDISEASE & fINDICATOR) Rows with NA in CATEGORIES")
 
 dim(df_dta)
 ```
 
-There seems to be a mix up here between **VALUE** and **CATEGORIES**. 
+There seems to be a mix-up here between **VALUE** and **CATEGORIES**. 
 The rows look like they mean that if the treatment is very effective, than you have these quotes and keypoints.
 And, when the treatment is moderately effective, there is also a keypoint.
 Both keypoints are the exact same, but this does not necessarily mean we can remove the data.
@@ -90,33 +90,29 @@ We can however change the value to a category.
 # change VALUE and CATEGORY
 df_dta <- df_dta %>%
   mutate(
-    CATEGORIES = ifelse(fID == "Malignant melanoma" & 
+    CATEGORIES = ifelse(fDISEASE == "Malignant melanoma" & 
                         fINDICATOR == "Effectiveness of treatment" & 
                         VALUE == "Very effective", VALUE, CATEGORIES),
     
-    VALUE = ifelse(fID == "Malignant melanoma" & 
+    VALUE = ifelse(fDISEASE == "Malignant melanoma" & 
                    fINDICATOR == "Effectiveness of treatment" & 
-                   VALUE == "Very effective", "0", VALUE)
+                   (VALUE == "Very effective" | VALUE == "Moderately effective"), NA, VALUE)
   )
-
-
-df_dta <- df_dta %>%
-  mutate(
-    CATEGORIES = ifelse(fID == "Malignant melanoma" & 
-                        fINDICATOR == "Effectiveness of treatment" & 
-                        VALUE == "Very effective", VALUE, CATEGORIES),
-    
-    VALUE = ifelse(fID == "Malignant melanoma" & 
-                   fINDICATOR == "Effectiveness of treatment" & 
-                   VALUE == "Moderately effective", "0", VALUE)
-  )
-
-
 ```
+
+The second problem is the prevalence under Malignant melanoma being over the entire population (we think).
+This is a problem that has to be solved when standardizing the values.
+
 
 
 
 ### cleaned dataset
+```{r}
+# sort data
+df_dta <- df_dta %>%
+  arrange(fDISEASE, fDIMENSION, fDOMAIN, fCRITERION, fINDICATOR, CATEGORIES)
+```
+
 ```{r}
 dim(df_dta)
 

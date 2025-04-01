@@ -1,0 +1,34 @@
+
+An id is assigned to each row as this are the final cleaned rows at this point.
+Similar to a relational database, we separate the plain text variables from the main dataset with a key (id).
+This, because there are multiple values per cell in some keypoints and quotes.
+
+```{r}
+df_dta <- df_dta %>%
+  mutate(ID = seq(0, nrow(df_dta) - 1)) %>%
+  select(ID, everything())
+  
+head(df_dta)
+```
+
+```{r}
+# Keypoints
+df_dta_kp <- df_dta[!is.na(df_dta$KEY_POINT), c("ID", "KEY_POINT")] %>%
+  separate_rows(KEY_POINT, sep = ";") %>%
+  mutate(KEY_POINT = str_trim(KEY_POINT)) %>%
+  mutate(KEY_POINT = str_remove_all(KEY_POINT, '^"|"$'))
+
+head(df_dta_kp, n = 10)
+```
+
+```{r}
+# Quotes
+df_dta_qt <- df_dta[!is.na(df_dta$QUOTES), c("ID", "QUOTES")] %>%
+  separate_rows(QUOTES, sep = ";") %>%
+  mutate(QUOTES = str_trim(QUOTES)) %>%
+  mutate(QUOTES = str_remove_all(QUOTES, '^"|"$'))
+
+head(df_dta_qt, n = 10)
+```
+
+

@@ -3,15 +3,15 @@
 ```{r}
 # convert to factor
 typeof(df_dta$ID)
-df_dta$fID <- as.factor(df_dta$ID)
-df_dta <- df_dta %>% relocate(fID, .after = ID)
+df_dta$fDISEASE <- as.factor(df_dta$ID)
+df_dta <- df_dta %>% relocate(fDISEASE, .after = ID)
 df_dta$ID <- NULL
 
 # levels
-table(df_dta$fID)
+table(df_dta$fDISEASE)
 
 # na values
-sum(is.na(df_dta$fID))
+sum(is.na(df_dta$fDISEASE))
 ```
 This variable partitions all data points into the disease they belong to:
 
@@ -20,119 +20,27 @@ This variable partitions all data points into the disease they belong to:
 * **Malignant melanoma:** The most serious type of skin cancer that develops in the melanocytes, the cells that produce melanin (the pigment that gives skin its color).
 
 All rows have an id, so no cleaning needs to be done yet on the basis of this variable.
-Determine urgency for every ID separately or together?
-
-
-### Disease
-```{r}
-# convert to factor
-typeof(df_dta$DISEASE)
-
-# levels
-table(df_dta$DISEASE)
-df_dta$fID[as.character(df_dta$fID) != df_dta$DISEASE]
-df_dta$DISEASE[as.character(df_dta$fID) != df_dta$DISEASE]
-
-# remove column
-df_dta$DISEASE <- NULL
-```
-This is the exact same variable as ID, so the column can be removed.
-
-
-### Disease subtype
-```{r}
-# convert to factor
-typeof(df_dta$DISEASE_SUBTYPE)
-df_dta$fDISEASE_SUBTYPE <- as.factor(df_dta$DISEASE_SUBTYPE)
-df_dta <- df_dta %>% relocate(fDISEASE_SUBTYPE, .after = DISEASE_SUBTYPE)
-df_dta$DISEASE_SUBTYPE <- NULL
-
-# levels
-table(df_dta$fDISEASE_SUBTYPE)
-
-# na values
-sum(is.na(df_dta$fDISEASE_SUBTYPE))
-```
-This variable reports on different subtypes within a disease. It seems little reported on, so this is probably not useful for the priority system.
-
-
-### Disease proxy
-```{r}
-# convert to factor
-typeof(df_dta$DISEASE_PROXY)
-df_dta$fDISEASE_PROXY <- as.factor(df_dta$DISEASE_PROXY)
-df_dta <- df_dta %>% relocate(fDISEASE_PROXY, .after = DISEASE_PROXY)
-df_dta$DISEASE_PROXY <- NULL
-
-# levels
-table(df_dta$fDISEASE_PROXY)
-
-# na values
-sum(is.na(df_dta$fDISEASE_PROXY))
-```
-This variable does not seem useful, as Crohn's disease is a subtype of IBD.
-Malgnant melanoma is a type of skin cancer, therefore *Malignant melanoma*, *Malignant melanoma of skin* and *skin cancer* are all the same thing under the disease *Malignant melanoma*.
-
-
-### Country
-```{r}
-# levels
-table(df_dta$COUNTRY)
-
-# na values
-sum(is.na(df_dta$COUNTRY))
-
-# remove column
-df_dta$COUNTRY <- NULL
-```
-In each row the value is the same without missing values. 
-We will remove the column here and just mention in the data-section of the thesis that the data is all obtained from Belgium.
-
-
-### Country proxy
-```{r}
-# levels
-table(df_dta$COUNTRY_PROXY)
-
-# na values
-sum(is.na(df_dta$COUNTRY_PROXY))
-```
-This variable has only a few variables, but will be left in the dataset because it does show distinction between datapoints
-The na-values may just be an indicator that the data is obtained from Belgium.
-
-
-### Year
-```{r}
-# levels
-table(df_dta$YEAR)
-
-# na values
-sum(is.na(df_dta$YEAR))
-
-# correct column
-df_dta$YEAR[df_dta$YEAR == 2034] = 2024
-table(df_dta$YEAR)
-
-# histogram
-hist(df_dta$YEAR)
-```
-Two rows have the year 2034. This is probably a typo for 2024.
-The one datapoint from 2014 is weird, but not impossible, and not improbable enough to remove.
+The choice to rename this variable to fDISEASE instead of fID stems from the analysis of the DISEASE variable further.
+This name more accurately represents what the variable is about.
 
 
 ### Sex
 ```{r}
+# convert to factor
+typeof(df_dta$SEX)
+df_dta$fSEX <- as.factor(df_dta$SEX)
+df_dta <- df_dta %>% relocate(fSEX, .after = SEX)
+df_dta$SEX <- NULL
+
 # levels
-table(df_dta$SEX)
+table(df_dta$fSEX)
 
 # na values
-sum(is.na(df_dta$SEX))
-
-# remove column
-df_dta$SEX <- NULL
+sum(is.na(df_dta$fSEX))
 ```
-This variable does not give us any information about the sex. It is the same value for all rows, without missing values.
-This can be safely removed.
+This variable divides the data into the sexes. 
+It has for every criteria/category a value for both sexes and for every sex separately.
+This can be useful to compare what unmet needs are more urgent for each sex. 
 
 
 ### AGE
@@ -146,7 +54,8 @@ sum(is.na(df_dta$AGE))
 # remove column
 df_dta$AGE <- NULL
 ```
-This has the same issue as **SEX**, so the column can be removed.
+All values are the same for this variable and are not informative.
+Therefore this column can be safely removed.
 
 
 ### SES
@@ -160,7 +69,7 @@ sum(is.na(df_dta$SES))
 # remove column
 df_dta$SES <- NULL
 ```
-Again the same issue.
+This has the same issue as **AGE**, thus can be removed.
 
 
 ### Dimension
@@ -210,14 +119,8 @@ kable(criterion_table, format = "markdown")
 
 # na values
 sum(is.na(df_dta$fCRITERION))
-df_dta[is.na(df_dta$fCRITERION), ]
-
-# remove row
-df_dta <- df_dta[!is.na(df_dta$fCRITERION), ]
 ```
 These are the criteria we need to label in this thesis.
-Due to this missing value, this is a row we should delete, as **CRITERION** is what we need to label.
-For this data point there is no **VALUE**, **KEYPOINT** or **QUOTE** either. Further indicating that this row cannot be used.
 
 
 ### Indicator
@@ -234,18 +137,136 @@ kable(indicator_table, format = "markdown")
 # na values
 sum(is.na(df_dta$fINDICATOR))
 ```
-All rows have an indicator. This variable gives for each criterion certain indicators.
+All rows have an indicator. 
+This variable gives for each criterion certain indicators and is just like criterion an essential variable for each row.
+
+
+### Disease
+```{r}
+# convert to factor
+typeof(df_dta$DISEASE)
+
+# levels
+table(df_dta$DISEASE)
+df_dta$fDISEASE[as.character(df_dta$fDISEASE) != df_dta$DISEASE]
+df_dta$DISEASE[as.character(df_dta$fDISEASE) != df_dta$DISEASE]
+
+# remove column
+df_dta$DISEASE <- NULL
+```
+This is the exact same variable as ID, so the column can be removed.
+
+
+### Disease subtype
+```{r}
+# convert to factor
+typeof(df_dta$DISEASE_SUBTYPE)
+df_dta$fDISEASE_SUBTYPE <- as.factor(df_dta$DISEASE_SUBTYPE)
+df_dta <- df_dta %>% relocate(fDISEASE_SUBTYPE, .after = DISEASE_SUBTYPE)
+df_dta$DISEASE_SUBTYPE <- NULL
+
+# levels
+table(df_dta$fDISEASE_SUBTYPE)
+
+# na values
+sum(is.na(df_dta$fDISEASE_SUBTYPE))
+```
+This variable reports on different subtypes within a disease. 
+It seems little reported on, so this is probably not useful for the priority system.
+
+
+### Disease proxy
+```{r}
+# convert to factor
+typeof(df_dta$DISEASE_PROXY)
+df_dta$fDISEASE_PROXY <- as.factor(df_dta$DISEASE_PROXY)
+df_dta <- df_dta %>% relocate(fDISEASE_PROXY, .after = DISEASE_PROXY)
+df_dta$DISEASE_PROXY <- NULL
+
+# levels
+table(df_dta$fDISEASE_PROXY)
+
+# na values
+sum(is.na(df_dta$fDISEASE_PROXY))
+```
+This variable does not seem useful, as Crohn's disease is a subtype of IBD.
+Malgnant melanoma is a type of skin cancer, therefore *Malignant melanoma*, *Malignant melanoma of skin* and *skin cancer* are all the same thing under the disease *Malignant melanoma*.
+
+
+### Country
+```{r}
+# levels
+table(df_dta$COUNTRY)
+
+# na values
+sum(is.na(df_dta$COUNTRY))
+
+# remove column
+df_dta$COUNTRY <- NULL
+```
+In each row the value is the same, except for missing values.
+We will remove the column here and just mention in the data-section of the thesis that the data is all either obtained from Belgium or unknown.
+Note that this unknown data is most likely also from Belgium as that is where the data gathering took place, and all rows in the previous dataset where from Belgium.
+
+
+### Country proxy
+```{r}
+# convert to factor
+typeof(df_dta$COUNTRY_PROXY)
+df_dta$fCOUNTRY_PROXY <- as.factor(df_dta$COUNTRY_PROXY)
+df_dta <- df_dta %>% relocate(fCOUNTRY_PROXY, .after = COUNTRY_PROXY)
+df_dta$COUNTRY_PROXY <- NULL
+
+# levels
+table(df_dta$fCOUNTRY_PROXY)
+
+# na values
+sum(is.na(df_dta$fCOUNTRY_PROXY))
+```
+This variable has only a few variables, but will be left in the dataset because it does show distinction between datapoints
+The 'na'-values may just be an indicator that the data is obtained from Belgium.
+
+
+### Year
+```{r}
+# levels
+table(df_dta$YEAR)
+
+# na values
+sum(is.na(df_dta$YEAR))
+
+# histogram
+hist(df_dta$YEAR)
+
+# explain outliers
+df_dta[df_dta$YEAR == 2014 & !is.na(df_dta$YEAR), "SOURCE"]
+df_dta[df_dta$SOURCE == "Pil et al. 2016" & !is.na(df_dta$SOURCE), "YEAR"]
+
+# correct column
+df_dta$YEAR[df_dta$YEAR == 2034] = 2014
+table(df_dta$YEAR)
+```
+The four datapoints from 2014 are weird, but not impossible, and not improbable enough to remove.
+Two rows have the year 2034. at first we thought this was a typo for 2024.
+Upon further analysis we see that all the datapoints with year 2014 are sourced from a study of 2016, this makes sense with the data.
+However the 2034 columns also come from this study, leading us to the conclusion that they should be from 2014.
 
 
 ### Indicator proxy
 ```{r}
+# convert to factor
+typeof(df_dta$INDICATOR_PROXY)
+df_dta$fINDICATOR_PROXY <- as.factor(df_dta$INDICATOR_PROXY)
+df_dta <- df_dta %>% relocate(fCOUNTRY_PROXY, .after = INDICATOR_PROXY)
+df_dta$INDICATOR_PROXY <- NULL
+
 # levels
-table(df_dta$INDICATOR_PROXY)
+table(df_dta$fINDICATOR_PROXY)
 
 # na values
-sum(is.na(df_dta$INDICATOR_PROXY))
+sum(is.na(df_dta$fINDICATOR_PROXY))
 ```
-This does not tell us a lot, the variable will be left in the table, but likely won't be used.
+This does not tell us a lot, the variable will be left in the table, but won't be used.
 
 
 ### Measure
@@ -257,7 +278,9 @@ kable(table, format = "markdown")
 # na values
 sum(is.na(df_dta$MEASURE))
 ```
-These are the measures by which a category is portrayed. A lot of the rows do not have measures, but these may still be useful.
+These are the measures by which a category is portrayed. 
+A lot of the rows do not have measures, but these may still be useful since it might be deduced from the indicator, comment or meta.
+
 
 ### Unit
 ```{r}
@@ -268,7 +291,8 @@ kable(table, format = "markdown")
 # na values
 sum(is.na(df_dta$UNIT))
 ```
-These are the units for each measure.
+These are the units for each measure. There is a lot of missing data, but the measure mostly tells us already what this should be.
+To normalize the values it will be important to correctly interpret the missing data however.
 
 
 ### Categories
@@ -281,6 +305,7 @@ kable(table, format = "markdown")
 sum(is.na(df_dta$CATEGORIES))
 ```
 For each indicator there are various categories. The value for each category is regulated by a measure and unit for the measure.
+It seems to differ a lot between categories, which is a problem for clustering. We might need to find another way to classify their importance, perhaps in a more semi-supervised way. For this we would need to gather more data ourselves from experts.
 
 
 ### Value 
@@ -290,13 +315,19 @@ sum(is.na(df_dta$VALUE))
 
 # value is a character var
 typeof(df_dta$VALUE)
-df_dta$VALUE[!is.na(df_dta$VALUE) & is.na(suppressWarnings(as.numeric(df_dta$VALUE)))]
+df_dta$VALUE[!(df_dta$VALUE=="(Missing)") & is.na(suppressWarnings(as.numeric(df_dta$VALUE)))]
+
+# transform VALUE
+df_dta <- df_dta %>%
+  mutate(VALUE = na_if(VALUE, "(Missing)"))
 
 # convert to numeric and add extra column for non numeric to not lose data
 df_dta$VALUE_num <- suppressWarnings(as.numeric(df_dta$VALUE))
-df_dta$VALUE_char <- ifelse(is.na(df_dta$VALUE_num) & !is.na(df_dta$VALUE), df_dta$VALUE, NA)
+df_dta$VALUE_char <- ifelse(is.na(df_dta$VALUE_num), df_dta$VALUE, NA)
 df_dta <- df_dta %>% relocate(VALUE_num, .after = VALUE)
 df_dta <- df_dta %>% relocate(VALUE_char, .after = VALUE_num)
+
+
 
 df_dta[, c("VALUE_num", "VALUE_char")]
 
@@ -304,7 +335,7 @@ df_dta[, c("VALUE_num", "VALUE_char")]
 hist(df_dta$VALUE_num, breaks = 10)
 ```
 There are both numerical and plain text values, we separate them so we can work with both.
-In the histogram it is apparent that these values are not on the same scale, they should be scaled so different values on different scales can be compared.
+In the histogram it is apparent that these values are not on the same scale, they should be scaled so different values can be compared.
 
 
 ### SD
@@ -342,7 +373,8 @@ table(df_dta$SOURCE)
 # na values
 sum(is.na(df_dta$SOURCE))
 ```
-This contains the source for the datapoints.
+This contains the source for the datapoints. 
+It is not useful for building the priority model, but it is useful to see where the data came from.
 
 ### Rating
 ```{r}
@@ -364,9 +396,9 @@ head(df_dta[!is.na(df_dta$KEY_POINT), "KEY_POINT"])
 # na values
 sum(is.na(df_dta$KEY_POINT))
 ```
-A lot of missing values so we need to have a system where rows without keypoints do not
-necessarily gets a lower score.
+A lot of missing values so we need to have a system where rows without keypoints do not necessarily get a lower score.
 This variable needs to stay in plain text for classifying it with NLP.
+There are sometimes multiple quotes separated by a ';', we will leave it like this for now.
 
 
 ### Quotes
@@ -376,7 +408,7 @@ head(df_dta[!is.na(df_dta$QUOTES), "QUOTES"])
 # na values
 sum(is.na(df_dta$QUOTES))
 ```
-The same applies to the quotes af for the keypoints.
+The same applies to the quotes as for the keypoints.
 
 
 ### Meta 1
@@ -427,7 +459,7 @@ df_dta[!is.na(df_dta$CRITERION2) &
 # remove column
 df_dta$CRITERION2 <- NULL
 ```
-This column seems to contain the exact same data as **CRITERION** except less rows are filled in.
+This column seems to contain the exact same data as **CRITERION** except less rows are filled in and it is formulated differently.
 This variable can thus be removed.
 
 
@@ -438,7 +470,7 @@ head(df_dta[!is.na(df_dta$COMMENTS), "COMMENTS"])
 # na values
 sum(is.na(df_dta$COMMENTS))
 ```
-Like metadata, some extra information that might be usefull.
+Like metadata, some extra information that might be useful.
 
 
 ### Qualy
@@ -454,20 +486,33 @@ df_dta$QUALY <- NULL
 This column contains no data, so can be removed.
 
 
+### Value_Viz
+```{r}
+print(typeof(df_dta$VALUE_VIZ))
+
+# check difference with VALUE
+identical(df_dta$VALUE_num, df_dta$VALUE_VIZ)
+
+# remove column
+df_dta$VALUE_VIZ <- NULL
+```
+This variable is the exact same as the numerical part of **VALUE**. It can therefore be deleted.
+
+
 ## Univariate conclusion
 After the univariate analysis the data looks as follows:
 ```{r}
 head(df_dta)
 dim(df_dta)
 ```
-The 16 useful variables for further analysis are:
+The useful variables for further analysis are:
 
-* fID
-* fDISEASE_SUBTYPE
+* fDISEASE
 * fDIMENSION
 * fDOMAIN
 * fCRITERION
 * fINDICATOR
+* YEAR
 * MEASURE
 * UNIT
 * CATEGORIES
@@ -475,22 +520,40 @@ The 16 useful variables for further analysis are:
 * VALUE_char
 * KEY_POINT
 * QUOTES
-* META_1
-* META_2
-* COMMENTS
+* META/COMMENTS
 
 The deleted variables are:
 
 * DISEASE
 * COUNTRY
-* SEX
 * AGE
 * SES
 * META_3
 * RATING
 * CRITERION2
+* VALUE_VIZ
 
-Either because they were duplicates of other columns or if they contained no, or all the same values.
+Either because they were duplicates of other columns or if they contained no values, or all the same ones.
+
+The remaining columns with (substantial) missing data are:
+* (fDISEASE_SUBTYPE)
+* (fDISEASE_PROXY)
+* (fCOUNTRY_PROXY)
+* YEAR
+* (fINDICATOR_PROXY)
+* MEASURE
+* UNIT
+* CATEGORIES
+* VALUE
+* SOURCE
+* KEY_POINT
+* QUOTES
+* META/COMMENTS
+
+The variables in brackets are not important for further analysis, since they are too sparse and/or don't tell anything about the diseases or criteria.
+They will be left in the dataset to see if we can get any conclusions on these with our model.
+For creating the model, they are not useful.
+
 The most important findings are that many of the variables are only sparsely filled in, and we identified the important variables for further analysis.
 
 
