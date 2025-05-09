@@ -1,0 +1,228 @@
+
+## General
+```{r}
+# summary
+summary(df_dta)
+
+# dimensions
+dim(df_dta)
+```
+
+
+
+```{r}
+# General information table
+summarize_df <- function(df) {
+  data.frame(
+    Variable = names(df),
+    nonNA_Count = sapply(df, function(x) sum(!is.na(x))),
+    Distinct_Count = sapply(df, function(x) length(unique(na.omit(x)))),
+    NA_Count = sapply(df, function(x) sum(is.na(x))),
+    stringsAsFactors = FALSE
+  )
+}
+
+# Apply and display with kable
+summary_table <- summarize_df(df_dta)
+kable(summary_table, caption = "Summary of Variables")
+
+```
+
+## Univariate
+### DISEASE
+```{r}
+df_dta %>%
+  group_by(fDISEASE) %>%
+  summarise(Count = n()) %>%
+  arrange(desc(Count))
+```
+
+### DOMAIN & DIMENSION
+```{r}
+df_dta %>%
+  group_by(fDIMENSION) %>%
+  summarise(Count = n()) %>%
+  arrange(desc(Count))
+
+df_dta %>%
+  group_by(fDOMAIN) %>%
+  summarise(Count = n()) %>%
+  arrange(desc(Count))
+```
+
+
+### VALUE
+```{r}
+ggplot(df_dta, aes(x = VALUE_num)) +
+  geom_histogram(bins = 10, fill = "steelblue", color = "white") +
+  labs(
+    x = "VALUE_num",
+    y = "Frequency"
+  ) +
+  theme_minimal()
+```
+
+
+```{r}
+df_filtered <- df_dta %>%
+  filter(grepl("%", UNIT))
+
+ggplot(df_filtered, aes(x = VALUE_num)) +
+  geom_histogram(bins = 10, fill = "steelblue", color = "white") +
+  labs(
+    x = "VALUE_num",
+    y = "Frequency"
+  ) +
+  theme_minimal()
+```
+
+
+
+### MEASURE
+```{r}
+df_dta_tmp <- df_dta %>%
+  mutate(tmp_ID = as.numeric(factor(MEASURE)))
+
+ggplot(df_dta_tmp, aes(x = factor(tmp_ID))) +
+  geom_bar(fill = "steelblue") +
+  labs(
+    x = "MEASURE (Numbered)",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+lookup_table <- df_dta_tmp %>%
+  select(tmp_ID, MEASURE) %>%
+  distinct() %>%
+  arrange(tmp_ID)
+
+kable(lookup_table)
+
+```
+
+### UNIT
+```{r}
+df_dta_tmp <- df_dta %>%
+  mutate(tmp_ID = as.numeric(factor(UNIT)))
+
+ggplot(df_dta_tmp, aes(x = factor(tmp_ID))) +
+  geom_bar(fill = "steelblue") +
+  labs(
+    x = "UNIT (Numbered)",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+lookup_table <- df_dta_tmp %>%
+  select(tmp_ID, UNIT) %>%
+  distinct() %>%
+  arrange(tmp_ID)
+
+kable(lookup_table)
+```
+### KEY_POINT & QUOTES
+```{r}
+summary_table <- data.frame(
+  Variable = c("KEY_POINT", "QUOTES"),
+  Row_Count = c(nrow(df_dta_kp), nrow(df_dta_qt)),
+  Distinct_Count = c(n_distinct(df_dta_kp$KEY_POINT), n_distinct(df_dta_qt$QUOTES))
+)
+
+# Display with kable
+kable(summary_table, caption = "Summary of KEY_POINT and QUOTES Variables")
+```
+
+
+
+## Multivariate
+### DISEASE x DIMENSION
+```{r}
+crossTable <- table(df_dta$fDISEASE, df_dta$fDIMENSION)
+crossTable_df <- as.data.frame.matrix(crossTable)
+kable(crossTable_df, caption = "Cross Table of fDISEASE and fDIMENSION")
+```
+
+
+### DISEASE x DOMAIN
+```{r}
+crossTable <- table(df_dta$fDISEASE, df_dta$fDOMAIN)
+crossTable_df <- as.data.frame.matrix(crossTable)
+kable(crossTable_df, caption = "Cross Table of fDISEASE and fDOMAIN")
+```
+
+
+
+### DISEASE x CRITERION
+```{r}
+df_summary <- df_dta %>%
+  group_by(fCRITERION, fDISEASE) %>%
+  summarise(Count = n(), .groups = "drop") %>%
+  mutate(CRIT_ID = as.numeric(factor(fCRITERION)))
+
+# Plot with criterion number on x-axis
+ggplot(df_summary, aes(x = as.factor(CRIT_ID), y = Count, fill = fDISEASE)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    x = "CRITERION",
+    y = "Number of Observations"
+  ) +
+  theme_minimal()
+
+criterion_mapping <- df_summary %>%
+  select(CRIT_ID, fCRITERION) %>%
+  distinct() %>%
+  arrange(CRIT_ID)
+
+kable(criterion_mapping, caption = "Mapping of CRIT_ID to fCRITERION")
+```
+
+### MEASURE x UNIT x VALUE
+```{r}
+crosstable <- df_dta %>%
+  mutate(
+    VALUE_present   = !is.na(VALUE),
+    MEASURE_present = !is.na(MEASURE),
+    UNIT_present    = !is.na(UNIT)
+  ) %>%
+  count(VALUE_present, MEASURE_present, UNIT_present) %>%
+  arrange(desc(n))
+
+print(crosstable)
+```
+
+
+### VALUE x KEYPOINTS x QUOTES
+```{r}
+crosstable <- df_dta %>%
+  mutate(
+    MEASURE_present = !is.na(VALUE),
+    VALUE_present   = !is.na(KEY_POINT),
+    UNIT_present    = !is.na(QUOTES)
+  ) %>%
+  count(MEASURE_present, VALUE_present, UNIT_present) %>%
+  arrange(desc(n))
+
+print(crosstable)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

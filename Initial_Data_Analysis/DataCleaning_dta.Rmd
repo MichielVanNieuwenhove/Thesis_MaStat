@@ -80,30 +80,30 @@ kable(df_filtered, caption = "Duplicate (fDISEASE & fINDICATOR) Rows with NA in 
 dim(df_dta)
 ```
 
-There seems to be a mix-up here between **VALUE** and **CATEGORIES**. 
-The rows look like they mean that if the treatment is very effective, than you have these quotes and keypoints.
-And, when the treatment is moderately effective, there is also a keypoint.
-Both keypoints are the exact same, but this does not necessarily mean we can remove the data.
-We can however change the value to a category.
 
+### Character values
+
+The character values are hard to use in any kind of model here. We won't remove them, but we probably won't be able to use them. The 'Not applicable'-value however can be removed, because it has not other value, keypoint and quote, and evidently is not applicable
 ```{r}
-# change VALUE and CATEGORY
-df_dta <- df_dta %>%
-  mutate(
-    CATEGORIES = ifelse(fDISEASE == "Malignant melanoma" & 
-                        fINDICATOR == "Effectiveness of treatment" & 
-                        VALUE == "Very effective", VALUE, CATEGORIES),
-    
-    VALUE = ifelse(fDISEASE == "Malignant melanoma" & 
-                   fINDICATOR == "Effectiveness of treatment" & 
-                   (VALUE == "Very effective" | VALUE == "Moderately effective"), NA, VALUE)
-  )
+kable(
+  df_dta[!is.na(df_dta$VALUE_char), c("fDISEASE", "fCRITERION", "fINDICATOR", "CATEGORIES", "VALUE_char")],
+  caption = "Filtered Data Table",
+  format = "markdown"
+)
 ```
 
-The second problem is the prevalence under Malignant melanoma being over the entire population (we think).
-This is a problem that has to be solved when standardizing the values.
+```{r}
+df_dta <- df_dta[is.na(df_dta$VALUE_char) | df_dta$VALUE_char != "Not applicable", ]
+```
 
 
+
+### Removing empty rows
+
+fINDICATOR_PROXY can be removed as it has only NA-values.
+```{r}
+df_dta$fINDICATOR_PROXY <- NULL
+```
 
 
 ### cleaned dataset

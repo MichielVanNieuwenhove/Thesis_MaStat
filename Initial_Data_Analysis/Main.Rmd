@@ -19,6 +19,7 @@ library(dplyr)
 library(openxlsx)
 library(tidyr)
 library(stringr)
+library(ggplot2)
 ```
 
 ```{r setup, include=FALSE}
@@ -56,17 +57,13 @@ head(df_dta)
 ```{r, child="DataCleaning_dta.Rmd"}
 ```
 
-# Normalize Values
-```{r, child="NormalizeValues_dta.Rmd"}
-```
-
 # Separate Keypoints & Quotes
 ```{r, child="SeparateText_dta.Rmd"}
 ```
 
-# Final analysis
-## Univariate
-## Multivariate
+# Final Analysis
+```{r, child="FinalAnalysis_dta.Rmd"}
+```
 
 
 # Export cleaned data

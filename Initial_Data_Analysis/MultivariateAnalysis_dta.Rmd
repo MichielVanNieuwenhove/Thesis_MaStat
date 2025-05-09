@@ -78,6 +78,7 @@ df_dta[(!is.na(df_dta$VALUE) | !is.na(df_dta$KEY_POINT) | !is.na(df_dta$QUOTES))
 This is not enough data to work with, the specific sexes rows will be removed.
 ```{r}
 df_dta <- df_dta[df_dta$fSEX == "Both sexes", ]
+df_dta$fSEX <- NULL
 dim(df_dta)
 ```
 
@@ -181,17 +182,16 @@ What we could gain from this is seeing how much data misses per criterion (or in
 ### Measure & Unit
 #### Measure x Unit x value
 ```{r}
-table <- df_dta %>%
-  summarise(
-    measure_not_na_unit_na = sum(!is.na(MEASURE) & is.na(UNIT)),
-    measure_na_unit_not_na = sum(is.na(MEASURE) & !is.na(UNIT)),
-    measure_not_na_value_na = sum(!is.na(MEASURE) & is.na(VALUE)),
-    measure_na_value_not_na = sum(is.na(MEASURE) & !is.na(VALUE)),
-    value_not_na_unit_na = sum(!is.na(VALUE) & is.na(UNIT)),
-    value_na_unit_not_na = sum(is.na(VALUE) & !is.na(UNIT))
-  )
+crosstable <- df_dta %>%
+  mutate(
+    MEASURE_present = !is.na(MEASURE),
+    VALUE_present   = !is.na(VALUE),
+    UNIT_present    = !is.na(UNIT)
+  ) %>%
+  count(MEASURE_present, VALUE_present, UNIT_present) %>%
+  arrange(desc(n))
 
-print(table)
+print(crosstable)
 ```
 There are no rows where the measure has a value, but the unit does not. So for every measure we have a unit.
 Vice versa, this is not the case. In the data cleaning we will need to go row by row and analyse if there are among these any unusable rows.
@@ -202,13 +202,30 @@ There are also values without a measure or unit. In this case the meaning of the
 ### Value & keypoints & quotes
 #### Value x Keypoint x Quotes
 ```{r}
-rows_missing_all <- df_dta %>%
-  filter(is.na(VALUE) & is.na(KEY_POINT) & is.na(QUOTES)) %>%
-  summarise(count = n())
+crosstable <- df_dta %>%
+  mutate(
+    MEASURE_present = !is.na(VALUE),
+    VALUE_present   = !is.na(KEY_POINT),
+    UNIT_present    = !is.na(QUOTES)
+  ) %>%
+  count(MEASURE_present, VALUE_present, UNIT_present) %>%
+  arrange(desc(n))
 
-print(rows_missing_all)
+print(crosstable)
 ```
 There are 67 rows where there are no values, keypoints and quotes. In theory these rows can than not be used. There are, however, some possible exceptions as mentioned before.
+
+
+### SD x CI
+```{r}
+filtered_df <- df_dta[!is.na(df_dta$SD) | !is.na(df_dta$`LOWER CI`) | !is.na(df_dta$`UPPER CI`), 
+                      c('VALUE_num', 'SD', 'LOWER CI', 'UPPER CI')]
+
+# Create kable table
+kable(filtered_df, caption = "Summary of SD and Confidence Intervals", digits = 3)
+
+summary(filtered_df)
+```
 
 
 ### Conclusion

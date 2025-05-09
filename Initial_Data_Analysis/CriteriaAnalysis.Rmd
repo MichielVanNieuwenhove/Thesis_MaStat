@@ -1,0 +1,837 @@
+
+## General
+```{r}
+df_dta %>%
+  distinct(fDISEASE, fCRITERION) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE, 
+              values_from = value, 
+              values_fill = "") %>%
+  kable(caption = "Crosstable of CRITERION vs DISEASE")
+
+```
+
+
+## Impact on autonomy
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on autonomy") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Mobility
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on autonomy") %>%
+  filter(fINDICATOR == "Mobility") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Self-care
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on autonomy") %>%
+  filter(fINDICATOR == "Self-care") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Usual activities
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on autonomy") %>%
+  filter(fINDICATOR == "Usual activities") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Impact on general health-related quality of life
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on general health-related quality of life") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Associated comorbidities
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on general health-related quality of life") %>%
+  filter(fINDICATOR == "Associated comorbidities") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### EQ-5D-5L average score
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on general health-related quality of life") %>%
+  filter(fINDICATOR == "EQ-5D-5L average score") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Years of life lived with disability (per case)
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on general health-related quality of life") %>%
+  filter(fINDICATOR == "Years of life lived with disability (per case)") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### EQ-5D average score
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on general health-related quality of life") %>%
+  filter(fINDICATOR == "EQ-5D average score") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Impact on life expectancy
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on life expectancy") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Years of Life Lost
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on life expectancy") %>%
+  filter(fINDICATOR == "Years of Life Lost") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Years of Life Lost (per death)
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on life expectancy") %>%
+  filter(fINDICATOR == "Years of Life Lost (per death)") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Impact on physical health
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on physical health") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Experienced burden of physical symptoms
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on physical health") %>%
+  filter(fINDICATOR == "Experienced burden of physical symptoms") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Pain/discomfort
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on physical health") %>%
+  filter(fINDICATOR == "Pain/discomfort") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Impact on psychological health
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on psychological health") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Anxiety/depression
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on psychological health") %>%
+  filter(fINDICATOR == "Anxiety/depression") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Experienced burden of psychological symptoms related to the health issue
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on psychological health") %>%
+  filter(fINDICATOR == "Experienced burden of psychological symptoms related to the health issue") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Experienced burden of psychological symptoms
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on psychological health") %>%
+  filter(fINDICATOR == "Experienced burden of psychological symptoms") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Accessibility
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Accessibility") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Foregone care
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Accessibility") %>%
+  filter(fINDICATOR == "Foregone care") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Treatment availability
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Accessibility") %>%
+  filter(fINDICATOR == "Treatment availability") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Burden of treatment
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Burden of treatment") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Experienced burden of side-effects of treatment
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Burden of treatment") %>%
+  filter(fINDICATOR == "Experienced burden of side-effects of treatment") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Experienced burden of treatment
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Burden of treatment") %>%
+  filter(fINDICATOR == "Experienced burden of treatment") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Effectiveness of treatment
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Effectiveness of treatment") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Effectiveness of treatment
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Effectiveness of treatment") %>%
+  filter(fINDICATOR == "Effectiveness of treatment") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Quality of care
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Quality of care") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Clarity of information received
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Quality of care") %>%
+  filter(fINDICATOR == "Clarity of information received") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+###	Diagnostic timing
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Quality of care") %>%
+  filter(fINDICATOR == "Diagnostic timing") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+###	Experience with the organisation of care
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Quality of care") %>%
+  filter(fINDICATOR == "Experience with the organisation of care") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+###	Involvement in treatment choice
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Quality of care") %>%
+  filter(fINDICATOR == "Involvement in treatment choice") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+###	Quantity of information received
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Quality of care") %>%
+  filter(fINDICATOR == "Quantity of information received") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Financial consequences
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Financial consequences") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Non-healthcare costs
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Financial consequences") %>%
+  filter(fINDICATOR == "Non-healthcare costs") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Out-of-pocket healthcare costs
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Financial consequences") %>%
+  filter(fINDICATOR == "Out-of-pocket healthcare costs") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Impact of social life
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact of social life") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Social support needs
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact of social life") %>%
+  filter(fINDICATOR == "Social support needs") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Impact on work
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on work") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Changes in working time
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on work") %>%
+  filter(fINDICATOR == "Changes in working time") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Frequency
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Frequency") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Incidence or prevalence
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Frequency") %>%
+  filter(fINDICATOR == "Incidence or prevalence") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Prevalence
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Frequency") %>%
+  filter(fINDICATOR == "Prevalence") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Preventability
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Preventability") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Implementation of effective primary prevention strategies
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Preventability") %>%
+  filter(fINDICATOR == "Implementation of effective primary prevention strategies") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Productivity losses
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Productivity losses") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Costs related to work absenteeism, presenteeism or/and early labor force exits of caregivers
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Productivity losses") %>%
+  filter(fINDICATOR == "Costs related to work absenteeism, presenteeism or/and early labor force exits of caregivers") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Costs related to work absenteeism, presenteeism, early labor force exits of patients
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Productivity losses") %>%
+  filter(fINDICATOR == "Costs related to work absenteeism, presenteeism, early labor force exits of patients") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Forecasted healthcare costs
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Forecasted healthcare costs") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Forecasted healthcare costs attributable to the health condition
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Forecasted healthcare costs") %>%
+  filter(fINDICATOR == "Forecasted healthcare costs attributable to the health condition") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Forecasted productivity losses
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Forecasted productivity losses") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Forecasted productivity losses attributable to the health condition
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Forecasted productivity losses") %>%
+  filter(fINDICATOR == "Forecasted productivity losses attributable to the health condition") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Impact on social life
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on social life") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Social support needs
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Impact on social life") %>%
+  filter(fINDICATOR == "Social support needs") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Burden on informal caregivers
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Burden on informal caregivers") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Loss in informal caregiver’s quality of life	
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Burden on informal caregivers") %>%
+  filter(fINDICATOR == "Loss in informal caregiver’s quality of life") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Value for money of standard of care
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Value for money of standard of care") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Healthcare costs per unit of health gain	
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Value for money of standard of care") %>%
+  filter(fINDICATOR == "Healthcare costs per unit of health gain") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+## Environmental impact of standard of care 
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Environmental impact of standard of care") %>%
+  distinct(fINDICATOR, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+### Hazardous waste related to standard of care
+```{r}
+df_dta %>%
+  filter(fCRITERION == "Environmental impact of standard of care") %>%
+  filter(fINDICATOR == "Hazardous waste related to standard of care") %>%
+  distinct(CATEGORIES, fDISEASE) %>%
+  mutate(value = "✓") %>%
+  pivot_wider(names_from = fDISEASE,
+              values_from = value,
+              values_fill = "") %>%
+  kable()
+```
+
+
+
+
+
+

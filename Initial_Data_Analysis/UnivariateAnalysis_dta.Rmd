@@ -257,7 +257,7 @@ However the 2034 columns also come from this study, leading us to the conclusion
 # convert to factor
 typeof(df_dta$INDICATOR_PROXY)
 df_dta$fINDICATOR_PROXY <- as.factor(df_dta$INDICATOR_PROXY)
-df_dta <- df_dta %>% relocate(fCOUNTRY_PROXY, .after = INDICATOR_PROXY)
+df_dta <- df_dta %>% relocate(fINDICATOR_PROXY, .after = INDICATOR_PROXY)
 df_dta$INDICATOR_PROXY <- NULL
 
 # levels
