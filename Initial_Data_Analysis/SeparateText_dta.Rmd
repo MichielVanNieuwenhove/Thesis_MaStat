@@ -5,28 +5,32 @@ This, because there are multiple values per cell in some keypoints and quotes.
 
 ```{r}
 df_dta <- df_dta %>%
-  mutate(ID = seq(0, nrow(df_dta) - 1)) %>%
-  select(ID, everything())
+  mutate(ID_dta = row_number()) %>%
+  select(ID_dta, everything())
   
 head(df_dta)
 ```
 
 ```{r}
 # Keypoints
-df_dta_kp <- df_dta[!is.na(df_dta$KEY_POINT), c("ID", "KEY_POINT")] %>%
+df_dta_kp <- df_dta[!is.na(df_dta$KEY_POINT), c("ID_dta", "KEY_POINT")] %>%
   separate_rows(KEY_POINT, sep = ";") %>%
   mutate(KEY_POINT = str_trim(KEY_POINT)) %>%
-  mutate(KEY_POINT = str_remove_all(KEY_POINT, '^"|"$'))
+  mutate(KEY_POINT = str_remove_all(KEY_POINT, '^"|"$')) %>%
+  mutate(ID_kp = row_number()) %>%
+  select(ID_kp, everything())
 
 head(df_dta_kp, n = 10)
 ```
 
 ```{r}
 # Quotes
-df_dta_qt <- df_dta[!is.na(df_dta$QUOTES), c("ID", "QUOTES")] %>%
+df_dta_qt <- df_dta[!is.na(df_dta$QUOTES), c("ID_dta", "QUOTES")] %>%
   separate_rows(QUOTES, sep = ";") %>%
   mutate(QUOTES = str_trim(QUOTES)) %>%
-  mutate(QUOTES = str_remove_all(QUOTES, '^"|"$'))
+  mutate(QUOTES = str_remove_all(QUOTES, '^"|"$')) %>%
+  mutate(ID_qt = row_number()) %>%
+  select(ID_qt, everything())
 
 head(df_dta_qt, n = 10)
 ```
