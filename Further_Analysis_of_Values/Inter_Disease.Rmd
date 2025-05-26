@@ -1,0 +1,11 @@
+
+
+```{r}
+subset_rows <- df_dta[grepl("EQ-5D", df_dta$fINDICATOR), ]
+kable(subset_rows[, c("fDISEASE", "fINDICATOR", "CATEGORIES", "VALUE", "SD", "LOWER CI", "UPPER CI")])
+```
+
+```{r}
+# t-test? only possible if you know n
+```
+

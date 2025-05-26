@@ -1,0 +1,32 @@
+---
+title: "Further_Analysis_of_Values"
+output: html_document
+date: "2025-05-16"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+library(arrow)
+library(knitr)
+```
+
+
+# Load Data
+```{r}
+df_dta <- read_feather("../Data/Cleaned/df_dta_cleaned.feather")
+head(df_dta)
+```
+
+
+# Inter-Disease Relationships
+```{r, child="Inter_Disease.Rmd"}
+```
+
+
+# Inter-Criteria Relationships
+```{r, child="Inter_Criteria.Rmd"}
+```
+
