@@ -13,6 +13,7 @@ library(arrow)
 library(knitr)
 library(dplyr)
 library(tidyr)
+library(purrr)
 ```
 
 

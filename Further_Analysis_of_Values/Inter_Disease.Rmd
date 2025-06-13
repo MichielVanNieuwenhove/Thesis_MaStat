@@ -61,3 +61,76 @@ cat("95% CI for difference: [", diff_lower, ",", diff_upper, "]\n")
 ```
 
 
+## Proportion of Diff indicators
+```{r}
+# Filter the categories
+filtered <- df_dta %>%
+  filter(CATEGORIES %in% c("BEFORE", "TODAY"))
+
+# Group by disease and process each group individually
+final_tables_by_disease <- filtered %>%
+  group_split(fDISEASE) %>%
+  set_names(map_chr(., ~ unique(.x$fDISEASE))) %>%
+  map(function(disease_df) {
+    # Filter for indicators that have both BEFORE and TODAY
+    indicators_with_both <- disease_df %>%
+      group_by(fINDICATOR) %>%
+      filter(all(c("BEFORE", "TODAY") %in% CATEGORIES)) %>%
+      ungroup()
+    
+    # Get distinct fCRITERION per indicator
+    criteria_lookup <- indicators_with_both %>%
+      select(fINDICATOR, fCRITERION) %>%
+      distinct()
+    
+    # Compute means
+    mean_table <- indicators_with_both %>%
+      group_by(fINDICATOR, CATEGORIES) %>%
+      summarise(mean_value = mean(VALUE_num, na.rm = TRUE), .groups = 'drop')
+    
+    # Pivot wider and join
+    cross_table <- mean_table %>%
+      pivot_wider(names_from = CATEGORIES, values_from = mean_value)
+    
+    final_table <- cross_table %>%
+      left_join(criteria_lookup, by = "fINDICATOR") %>%
+      relocate(fCRITERION, .before = fINDICATOR) %>%
+      mutate(DIFFERENCE = TODAY - BEFORE)
+    
+    return(final_table)
+  })
+```
+```{r}
+# Print all final tables by disease
+walk2(
+  names(final_tables_by_disease),
+  final_tables_by_disease,
+  ~ {
+    cat("\n============================\n")
+    cat("Disease:", .x, "\n")
+    cat("============================\n")
+    print(.y)
+  }
+)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
