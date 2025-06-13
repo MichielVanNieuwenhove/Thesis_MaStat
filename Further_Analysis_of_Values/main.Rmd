@@ -11,6 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, include=FALSE}
 library(arrow)
 library(knitr)
+library(dplyr)
+library(tidyr)
 ```
 
 

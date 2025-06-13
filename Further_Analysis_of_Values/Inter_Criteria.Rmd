@@ -1,0 +1,28 @@
+
+```{r}
+filtered <- df_dta %>%
+  filter(CATEGORIES %in% c("BEFORE", "TODAY"))
+
+indicators_with_both <- filtered %>%
+  group_by(fINDICATOR) %>%
+  filter(all(c("BEFORE", "TODAY") %in% CATEGORIES)) %>%
+  ungroup()
+
+criteria_lookup <- indicators_with_both %>%
+  select(fINDICATOR, fCRITERION) %>%
+  distinct()
+
+mean_table <- indicators_with_both %>%
+  group_by(fINDICATOR, CATEGORIES) %>%
+  summarise(mean_value = mean(VALUE_num, na.rm = TRUE), .groups = 'drop')
+
+cross_table <- mean_table %>%
+  pivot_wider(names_from = CATEGORIES, values_from = mean_value)
+
+final_table <- cross_table %>%
+  left_join(criteria_lookup, by = "fINDICATOR") %>%
+  relocate(fCRITERION, .before = fINDICATOR) %>%
+  mutate(DIFFERENCE = TODAY - BEFORE)
+
+print(final_table)
+```

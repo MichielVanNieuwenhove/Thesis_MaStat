@@ -1,11 +1,63 @@
 
-
+## EQ-D5
 ```{r}
 subset_rows <- df_dta[grepl("EQ-5D", df_dta$fINDICATOR), ]
 kable(subset_rows[, c("fDISEASE", "fINDICATOR", "CATEGORIES", "VALUE", "SD", "LOWER CI", "UPPER CI")])
 ```
 
 ```{r}
-# t-test? only possible if you know n
+# CD: 50+
+# covid: 100+
+# melanoma: 40+
+
+mean1 <- 0.19
+sd1 <- 0.35
+n1 <- 100
+
+mean2 <- 0.12
+sd2 <- 0.19
+n2 <- 40
+
+group1 <- rnorm(n1, mean = mean1, sd = sd1)
+group2 <- rnorm(n2, mean = mean2, sd = sd2)
+t.test(group1, group2, var.equal = FALSE)
+
 ```
+
+
+```{r}
+value_before <- 0.84
+sd_before <- 0.25
+n_before <- 40
+
+value_today <- 0.65
+sd_today <- 0.25
+n_today <- 40
+
+# Calculate standard errors (SE)
+se_before <- sd_before / sqrt(n_before)
+se_today <- sd_today / sqrt(n_today)
+
+# Calculate difference in means
+diff_value <- value_before - value_today
+
+# Calculate SE of the difference (for inference)
+se_diff <- sqrt(se_before^2 + se_today^2)
+
+# Calculate 95% CI for the difference
+z <- 1.96
+diff_lower <- diff_value - z * se_diff
+diff_upper <- diff_value + z * se_diff
+
+# Calculate raw SD of the difference (assuming independence)
+sd_diff <- sqrt(sd_before^2 + sd_today^2)
+
+# Print results
+cat("SD before:", sd_before, "\n")
+cat("SD today:", sd_today, "\n")
+cat("SD of difference (raw):", sd_diff, "\n")
+cat("Difference:", diff_value, "\n")
+cat("95% CI for difference: [", diff_lower, ",", diff_upper, "]\n")
+```
+
 
