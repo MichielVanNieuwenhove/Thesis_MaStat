@@ -16,9 +16,9 @@ methods show promise for future analysis, and what additional data or preprocess
 would be necessary to more effectively address both objectives.
 
 ## Structure
-**Data**: contains the used data (NEED dataset [1], and GBD disability weights [2])
-**Initial_Data_analysis**: This contains an extensive analysis of the NEED dataset in R.
-**Further_Analysis_of_Values**: Consists of an R-project, extracting some extra analysis from the dataset, important to the implementation.
+**Data**: contains the used data (NEED dataset [1], and GBD disability weights [2]) \
+**Initial_Data_analysis**: This contains an extensive analysis of the NEED dataset in R. \
+**Further_Analysis_of_Values**: Consists of an R-project, extracting some extra analysis from the dataset, important to the implementation. \
 **Py_Notebooks**: This folder has all notebook files, trained models, and environment specifications. The analysis for the disability weights dataset is also shown here, in python.
 
 ## Technical Information
